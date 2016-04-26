@@ -540,6 +540,18 @@ set_target_properties(${LIBJEMALLOCLIB}
            ${LIBJEMALLOCLIB}
 )
 
+install(TARGETS ${LIBJEMALLOCLIB}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+export ( TARGETS ${LIBJEMALLOCLIB} FILE ${PROJECT_NAME}-config.cmake )
+
+    install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/jemalloc/jemalloc.h
+    DESTINATION include/jemalloc
+    )
+
+
 ##################################################################
 ## Building tests
 
@@ -551,6 +563,11 @@ set_target_properties(${C_JETLIB}
            COMPILE_DEFINITIONS 
            JEMALLOC_JET
 )
+install(TARGETS ${C_JETLIB}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+export ( TARGETS ${C_JETLIB} FILE ${PROJECT_NAME}-config.cmake )
 
 # Form here onward
 include_directories(${PROJECT_SOURCE_DIR}/test/include)
@@ -582,6 +599,12 @@ set_target_properties(${C_TESTLIB_UNIT}
            JEMALLOC_UNIT_TEST
 )
 
+install(TARGETS ${C_TESTLIB_UNIT}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+export ( TARGETS ${C_TESTLIB_UNIT} FILE ${PROJECT_NAME}-config.cmake )
+
 # Integration test library
 set(C_TESTLIB_INTEGRATION jemalloc_int_test${install_suffix})
 add_library(${C_TESTLIB_INTEGRATION} ${C_TESTLIB_SRCS})
@@ -592,6 +615,11 @@ set_target_properties(${C_TESTLIB_INTEGRATION}
            COMPILE_DEFINITIONS 
            JEMALLOC_INTEGRATION_TEST
 )
+install(TARGETS ${C_TESTLIB_INTEGRATION}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+	export ( TARGETS ${C_TESTLIB_INTEGRATION} FILE ${PROJECT_NAME}-config.cmake )
 
 # Stress test library
 set(C_TESTLIB_STRESS jemalloc_test_stress${install_suffix})
@@ -603,6 +631,11 @@ set_target_properties(${C_TESTLIB_STRESS}
            COMPILE_DEFINITIONS
            "JEMALLOC_STRESS_TEST;JEMALLOC_STRESS_TESTLIB"
 )
+install(TARGETS ${C_TESTLIB_STRESS}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+	export ( TARGETS ${C_TESTLIB_STRESS} FILE ${PROJECT_NAME}-config.cmake )
 
 set(C_UTIL_INTEGRATION_SRCS
     src/nstime.c
@@ -621,6 +654,11 @@ set_target_properties(${C_UTIL_INTEGRATION}
            COMPILE_DEFINITIONS 
            JEMALLOC_JET
 )
+install(TARGETS ${C_UTIL_INTEGRATION}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+	export ( TARGETS ${C_UTIL_INTEGRATION} FILE ${PROJECT_NAME}-config.cmake )
 
 set(TESTS_UNIT
     test/unit/atomic.c
@@ -676,6 +714,8 @@ foreach(sourcefile ${TESTS_UNIT})
                JEMALLOC_UNIT_TEST
     )
     target_link_libraries(${exename} ${C_TESTLIB_UNIT} ${C_JETLIB} ${LIBJEMALLOCLIB})
+	install(TARGETS ${exename} RUNTIME DESTINATION "bin/")
+	export ( TARGETS ${exename} FILE ${PROJECT_NAME}-config.cmake )
 endforeach(sourcefile ${TESTS_UNIT})
 
 
@@ -706,6 +746,8 @@ foreach(sourcefile ${TESTS_INTEGRATION})
                JEMALLOC_INTEGRATION_TEST
     )
     target_link_libraries(${exename} ${C_TESTLIB_INTEGRATION} ${C_UTIL_INTEGRATION} ${LIBJEMALLOCLIB})
+	install(TARGETS ${exename} RUNTIME DESTINATION "bin/")
+	export ( TARGETS ${exename} FILE ${PROJECT_NAME}-config.cmake )
 endforeach(sourcefile ${TESTS_UNIT})
 
 # set(TESTS_STRESS
